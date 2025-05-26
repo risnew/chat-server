@@ -3,21 +3,24 @@
 #include <string_view>
 
 #include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <unistd.h>
+#include <cstring>
 
-constexpr int DOMAIN{AF_LOCAL};
-constexpr int TYPE{42};
-constexpr int PROTOCOL{0};
+constexpr auto SERVER_IP = "127.0.0.1";
+constexpr auto PORT = 8080;
 
 class ClientImpl
 {
 public:
     ClientImpl(std::string_view name) : 
-        m_socket(socket(DOMAIN, TYPE, PROTOCOL))
+        m_socket(socket(AF_INET, SOCK_STREAM, 0))
     {
-        connect(name);
+        connectUser(name);
     }
 
-    void connect(std::string_view name)
+    void connectUser(std::string_view name)
     {
         if (establishConnection())
         {
@@ -31,14 +34,17 @@ public:
 
     bool establishConnection()
     {
-        const sockaddr SERVER_NAME{.sa_family = AF_LOCAL, .sa_data = "127.0.0.1"};
-        const socklen_t length{};
-        if (::connect(m_socket, &SERVER_NAME, length) < 0)
+        sockaddr_in SERVER_NAME{};
+        SERVER_NAME.sin_family = AF_INET;
+        SERVER_NAME.sin_addr.s_addr = inet_addr(SERVER_IP);
+        SERVER_NAME.sin_port = htons(PORT);
+
+        if (connect(m_socket, (sockaddr*)&SERVER_NAME, sizeof(SERVER_NAME)) < 0)
         {
             onConnectionFailed();
             return false;
         }
-        return false;
+        return true;
     }
 
     void onConnectionFailed()
@@ -49,11 +55,24 @@ public:
 
     void onSuccessfulConnection()
     {
-        //listen to the UI
-        //listen to the server
+        std::cout << "Connected to the server on " << SERVER_IP << ":" << PORT << "\n";
+        receiveMessage();
     }
 
 private:
+    void receiveMessage()
+    {
+        char buffer[1024];
+        int bytesReceived = recv(m_socket, buffer, sizeof(buffer) - 1, 0);
+        if (bytesReceived < 0) {
+            std::cerr << "Error in receiving data from server\n";
+            std::abort();
+        }
+
+        buffer[bytesReceived] = '\0';  // Null terminate the string
+        std::cout << "Message from server: " << buffer << std::endl;
+    }
+
     int m_socket;
 };
 
