@@ -1,66 +1,48 @@
 #include <iostream>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <unistd.h>
-#include <cstring>
+#include <memory>
+#include <string>
 
-constexpr int PORT{8080};
+#include <grpcpp/grpcpp.h>
+#include "../build/generated/chat.grpc.pb.h"
 
-class Server
+class ChatServiceImpl final : public chat::ChatService::ChatService::Service
 {
 public:
-    Server() :
-        m_socket(socket(AF_INET, SOCK_STREAM, 0))
-    {}
-    
-    ~Server()
+    grpc::Status SendMessage(grpc::ServerContext* context, const chat::ChatMessage* request, chat::ChatReply* reply) override 
     {
-        close(m_socket);
+        std::cout << "Received from " << request->name() << ": " << request->message() << "\n";
+        reply->set_response("Echo: " + request->message());
+        return grpc::Status::OK;
     }
+};
 
+class ChatServer 
+{
+public:
+    ChatServer(std::string address) : m_address(address) {}
 
     void start()
     {
-        //publish itself
-        sockaddr_in address{};
-        address.sin_addr.s_addr=INADDR_ANY;
-        address.sin_family=AF_INET;
-        address.sin_port=htons(PORT);
+        grpc::ServerBuilder serverBuilder;
+        serverBuilder
+        .AddListeningPort(m_address, grpc::InsecureServerCredentials())
+        .RegisterService(&m_service);
 
-        if (bind(m_socket, (sockaddr*)&address, sizeof(address)) < 0)
-        {
-            std::cerr << "The server cannot be started\n";
-            std::abort();
-        }
-
-        if(listen(m_socket, SOMAXCONN) < 0)
-        {
-            std::cerr << "The server cannot listen for connections.\n";
-            close(m_socket);
-            std::abort();
-        }
-
-        sockaddr_in clientAddress;
-        socklen_t clientSize = sizeof(clientAddress); 
-        int clientSocket = accept(m_socket, (sockaddr*)&clientAddress, &clientSize);
-        if(clientSocket < 0)
-        {
-            std::cerr << "Failed to accept client connection.\n";
-            std::abort();
-        }
-        const char* msg = "Welcome";
-        send(clientSocket, msg, strlen(msg), 0);
-        close(clientSocket);
-        std::cout << "Server started on port " << PORT << "\n";
+        m_server = serverBuilder.BuildAndStart();
+        std::cout << "Server listening on " << m_address << "\n";
+        m_server->Wait();
     }
 
 private:
-    int m_socket;
+    std::string m_address;
+    ChatServiceImpl m_service;
+    std::unique_ptr<grpc::Server> m_server;
+
 };
 
-int main() {
-    std::cout << "Server starting..." << std::endl;
-    Server server;
+int main()
+{
+    ChatServer server{"0.0.0.0:8080"};
     server.start();
     return 0;
 }

@@ -1,89 +1,53 @@
 #include <iostream>
+#include <memory>
 #include <string>
-#include <string_view>
 
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <unistd.h>
-#include <cstring>
+#include <grpcpp/grpcpp.h>
+#include "chat.grpc.pb.h"
 
-constexpr auto SERVER_IP = "127.0.0.1";
-constexpr auto PORT = 8080;
-
-class ClientImpl
+class ChatClient
 {
 public:
-    ClientImpl(std::string_view name) : 
-        m_socket(socket(AF_INET, SOCK_STREAM, 0))
+    ChatClient(std::shared_ptr<grpc::Channel> channel) : m_stub(chat::ChatService::NewStub(channel)) {}
+    
+    std::string SendMessage(const std::string& name, const std::string& message)
     {
-        connectUser(name);
-    }
+        chat::ChatMessage request;
+        request.set_name(name);
+        request.set_message(message);
 
-    void connectUser(std::string_view name)
-    {
-        if (establishConnection())
+        chat::ChatReply reply;
+
+        grpc::ClientContext context;
+
+        grpc::Status status = m_stub->SendMessage(&context, request, &reply);
+
+        if(status.ok())
         {
-            onSuccessfulConnection();
-        }
-        else
+            return reply.response();
+        } 
+        else 
         {
-            onConnectionFailed();
+            std::cerr << "RPC failed: " << status.error_message() << "\n";
+            return "RPC failed";
         }
     }
-
-    bool establishConnection()
-    {
-        sockaddr_in SERVER_NAME{};
-        SERVER_NAME.sin_family = AF_INET;
-        SERVER_NAME.sin_addr.s_addr = inet_addr(SERVER_IP);
-        SERVER_NAME.sin_port = htons(PORT);
-
-        if (connect(m_socket, (sockaddr*)&SERVER_NAME, sizeof(SERVER_NAME)) < 0)
-        {
-            onConnectionFailed();
-            return false;
-        }
-        return true;
-    }
-
-    void onConnectionFailed()
-    {
-        std::cerr << "Connection establishment failed\n";
-        std::abort();
-    }
-
-    void onSuccessfulConnection()
-    {
-        std::cout << "Connected to the server on " << SERVER_IP << ":" << PORT << "\n";
-        receiveMessage();
-    }
-
 private:
-    void receiveMessage()
-    {
-        char buffer[1024];
-        int bytesReceived = recv(m_socket, buffer, sizeof(buffer) - 1, 0);
-        if (bytesReceived < 0) {
-            std::cerr << "Error in receiving data from server\n";
-            std::abort();
-        }
-
-        buffer[bytesReceived] = '\0';  // Null terminate the string
-        std::cout << "Message from server: " << buffer << std::endl;
-    }
-
-    int m_socket;
+    std::unique_ptr<chat::ChatService::Stub> m_stub;
 };
 
-int main(int numberOfArguments, char ** args) {
-    if (numberOfArguments != 2u)
+int main(int numberOfArguments, char ** argv) 
+{
+    if (numberOfArguments != 3u)
     {
-        std::cerr << "Not supported number of arguments \n"; 
+        std::cerr << "Usage: client <name> <message>\n";
         std::abort();
     }
-    std::string name{args[1]};
-    std::cout << "Client starting..." << name << std::endl;
-    ClientImpl client(name);
-    return 0;
+
+    std::string name = argv[1];
+    std::string message = argv[2];
+
+    ChatClient client(grpc::CreateChannel("0.0.0.0:8080", grpc::InsecureChannelCredentials()));
+    std::string reply = client.SendMessage(name, message);
+    std::cout << "Server replied: " << reply << "\n";
 }
