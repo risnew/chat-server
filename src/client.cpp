@@ -1,53 +1,68 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <thread>
 
 #include <grpcpp/grpcpp.h>
+#include <grpcpp/alarm.h>
 #include "chat.grpc.pb.h"
 
 class ChatClient
 {
 public:
-    ChatClient(std::shared_ptr<grpc::Channel> channel) : m_stub(chat::ChatService::NewStub(channel)) {}
-    
-    std::string SendMessage(const std::string& name, const std::string& message)
+    ChatClient(std::shared_ptr<grpc::Channel> channel, const std::string& name) : m_stub(chat::ChatService::NewStub(channel)), m_name(name) {}
+
+    void Run()
     {
-        chat::ChatMessage request;
-        request.set_name(name);
-        request.set_message(message);
-
-        chat::ChatReply reply;
-
         grpc::ClientContext context;
+        auto stream = m_stub->Chat(&context);
 
-        grpc::Status status = m_stub->SendMessage(&context, request, &reply);
+        std::thread reader([&stream]() {
+            chat::ChatReply reply;
+            while (stream->Read(&reply)) {
+                std::cout << reply.response() << ": " << reply.message() << std::endl;
+            }
+        });
 
-        if(status.ok())
+        std::cout << "Enter messages (type 'exit' to quit):\n";
+
+        while (true) 
         {
-            return reply.response();
-        } 
-        else 
-        {
-            std::cerr << "RPC failed: " << status.error_message() << "\n";
-            return "RPC failed";
+            std::string text;
+            std::getline(std::cin, text);
+            if (text == "exit") break;
+       
+            chat::ChatMessage message;
+            message.set_name(m_name);
+            message.set_message(text);
+
+            if(!stream->Write(message))
+            {
+                std::cerr << "Failed to send the message.\n";
+                break;
+            }
         }
+
+        stream->WritesDone();
+        stream->Finish();
+        reader.join();
+
     }
 private:
+
+    std::string m_name;
     std::unique_ptr<chat::ChatService::Stub> m_stub;
 };
 
 int main(int numberOfArguments, char ** argv) 
 {
-    if (numberOfArguments != 3u)
+    std::string name = "User";
+    if (numberOfArguments > 1)
     {
-        std::cerr << "Usage: client <name> <message>\n";
-        std::abort();
+        name=argv[1];
     }
 
-    std::string name = argv[1];
-    std::string message = argv[2];
-
-    ChatClient client(grpc::CreateChannel("0.0.0.0:8080", grpc::InsecureChannelCredentials()));
-    std::string reply = client.SendMessage(name, message);
-    std::cout << "Server replied: " << reply << "\n";
+    ChatClient client(grpc::CreateChannel("0.0.0.0:8080", grpc::InsecureChannelCredentials()), name);
+    client.Run();
+    return 0;
 }

@@ -8,18 +8,56 @@
 class ChatServiceImpl final : public chat::ChatService::ChatService::Service
 {
 public:
-    grpc::Status SendMessage(grpc::ServerContext* context, const chat::ChatMessage* request, chat::ChatReply* reply) override 
-    {
-        std::cout << "Received from " << request->name() << ": " << request->message() << "\n";
-        reply->set_response("Echo: " + request->message());
+    grpc::Status Chat(grpc::ServerContext* context, grpc::ServerReaderWriter<chat::ChatReply, chat::ChatMessage>* stream) override 
+    {  
+        {        
+            std::lock_guard<std::mutex> lock(m_mutex);
+            m_streams.insert(stream);
+        }
+
+        chat::ChatMessage message;
+        while(stream->Read(&message))
+        {
+            std::string name = message.name();
+            std::string text = message.message();
+
+            std::cout << name << ": " << text << "\n";
+
+            chat::ChatReply reply;
+            reply.set_response(name);
+            reply.set_message(text);
+
+            broadcastMessage(reply);
+        }
+
+        {
+            std::lock_guard<std::mutex> lock(m_mutex);
+            m_streams.erase(stream);
+        }
+
         return grpc::Status::OK;
     }
+
+
+private:
+
+    void broadcastMessage(chat::ChatReply reply)
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        for(auto* stream : m_streams)
+        {
+            stream->Write(reply);
+        }
+    }
+
+    std::set<grpc::ServerReaderWriter<chat::ChatReply, chat::ChatMessage>*> m_streams;
+    std::mutex m_mutex;
 };
 
 class ChatServer 
 {
 public:
-    ChatServer(std::string address) : m_address(address) {}
+    ChatServer(const std::string& address) : m_address(address) {}
 
     void start()
     {
@@ -34,7 +72,8 @@ public:
     }
 
 private:
-    std::string m_address;
+
+    const std::string m_address;
     ChatServiceImpl m_service;
     std::unique_ptr<grpc::Server> m_server;
 
