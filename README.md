@@ -5,28 +5,7 @@ cd build
 cmake ../
 make
 ```
-This will generate two executables, `server` and `client`, which you can run by `./server` and `./client` respectively. 
+This will generate two executables, `chat_server` and `chat_client`, which you can run by `./chat_server` and `./chat_client` respectively.
+If you want to update the files under /generated, do `protoc --proto_path=../proto --cpp_out=./generated --grpc_out=./generated --plugin=protoc-gen-gr
+pc=<path_to_grpc_cpp_plugin> ../proto/chat.proto` where you can find <path_to_grpc_cpp_plugin> with `which grpc_cpp_plugin`. Most likely you will need to get protoc and other stuff as well. I did this: `sudo apt install -y protobuf-compiler libprotobuf-dev libprotoc-dev libgrpc++-dev grpc-proto`.
 
-## 💬 Server (server.cpp)
-
-- [ ] Create and bind a TCP socket (socket(), bind(), listen())
-
-- [ ]  Use select() to handle multiple client sockets
-
-- [ ] Accept new client connections and store their file descriptors
-
-- [ ]  Read data from connected clients
-
-- [ ] Broadcast each received message to all other clients
-
-- [ ] Handle client disconnects (remove closed sockets)
-
-## 👤 Client (client.cpp)
-
-- [ ] Connect to server using socket() + connect()
-
-- [ ] Launch a std::thread to receive messages from server continuously
-
-- [ ] Use the main thread to read user input and send to server
-
-- [ ] Gracefully handle disconnects (e.g., Ctrl+C)
