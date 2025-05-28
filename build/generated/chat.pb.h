@@ -363,32 +363,32 @@ class ChatReply PROTOBUF_FINAL :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kResponseFieldNumber = 1,
+    kNameFieldNumber = 1,
     kMessageFieldNumber = 2,
   };
-  // string response = 1;
-  void clear_response();
-  const std::string& response() const;
-  void set_response(const std::string& value);
-  void set_response(std::string&& value);
-  void set_response(const char* value);
-  void set_response(const char* value, size_t size);
-  std::string* mutable_response();
-  std::string* release_response();
-  void set_allocated_response(std::string* response);
+  // string name = 1;
+  void clear_name();
+  const std::string& name() const;
+  void set_name(const std::string& value);
+  void set_name(std::string&& value);
+  void set_name(const char* value);
+  void set_name(const char* value, size_t size);
+  std::string* mutable_name();
+  std::string* release_name();
+  void set_allocated_name(std::string* name);
   GOOGLE_PROTOBUF_RUNTIME_DEPRECATED("The unsafe_arena_ accessors for"
   "    string fields are deprecated and will be removed in a"
   "    future release.")
-  std::string* unsafe_arena_release_response();
+  std::string* unsafe_arena_release_name();
   GOOGLE_PROTOBUF_RUNTIME_DEPRECATED("The unsafe_arena_ accessors for"
   "    string fields are deprecated and will be removed in a"
   "    future release.")
-  void unsafe_arena_set_allocated_response(
-      std::string* response);
+  void unsafe_arena_set_allocated_name(
+      std::string* name);
   private:
-  const std::string& _internal_response() const;
-  void _internal_set_response(const std::string& value);
-  std::string* _internal_mutable_response();
+  const std::string& _internal_name() const;
+  void _internal_set_name(const std::string& value);
+  std::string* _internal_mutable_name();
   public:
 
   // string message = 2;
@@ -423,7 +423,7 @@ class ChatReply PROTOBUF_FINAL :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr response_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr message_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_chat_2eproto;
@@ -605,85 +605,85 @@ inline void ChatMessage::unsafe_arena_set_allocated_message(
 
 // ChatReply
 
-// string response = 1;
-inline void ChatReply::clear_response() {
-  response_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+// string name = 1;
+inline void ChatReply::clear_name() {
+  name_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
 }
-inline const std::string& ChatReply::response() const {
-  // @@protoc_insertion_point(field_get:chat.ChatReply.response)
-  return _internal_response();
+inline const std::string& ChatReply::name() const {
+  // @@protoc_insertion_point(field_get:chat.ChatReply.name)
+  return _internal_name();
 }
-inline void ChatReply::set_response(const std::string& value) {
-  _internal_set_response(value);
-  // @@protoc_insertion_point(field_set:chat.ChatReply.response)
+inline void ChatReply::set_name(const std::string& value) {
+  _internal_set_name(value);
+  // @@protoc_insertion_point(field_set:chat.ChatReply.name)
 }
-inline std::string* ChatReply::mutable_response() {
-  // @@protoc_insertion_point(field_mutable:chat.ChatReply.response)
-  return _internal_mutable_response();
+inline std::string* ChatReply::mutable_name() {
+  // @@protoc_insertion_point(field_mutable:chat.ChatReply.name)
+  return _internal_mutable_name();
 }
-inline const std::string& ChatReply::_internal_response() const {
-  return response_.Get();
+inline const std::string& ChatReply::_internal_name() const {
+  return name_.Get();
 }
-inline void ChatReply::_internal_set_response(const std::string& value) {
+inline void ChatReply::_internal_set_name(const std::string& value) {
   
-  response_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value, GetArena());
+  name_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value, GetArena());
 }
-inline void ChatReply::set_response(std::string&& value) {
+inline void ChatReply::set_name(std::string&& value) {
   
-  response_.Set(
+  name_.Set(
     &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value), GetArena());
-  // @@protoc_insertion_point(field_set_rvalue:chat.ChatReply.response)
+  // @@protoc_insertion_point(field_set_rvalue:chat.ChatReply.name)
 }
-inline void ChatReply::set_response(const char* value) {
+inline void ChatReply::set_name(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
   
-  response_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
+  name_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
               GetArena());
-  // @@protoc_insertion_point(field_set_char:chat.ChatReply.response)
+  // @@protoc_insertion_point(field_set_char:chat.ChatReply.name)
 }
-inline void ChatReply::set_response(const char* value,
+inline void ChatReply::set_name(const char* value,
     size_t size) {
   
-  response_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
+  name_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
       reinterpret_cast<const char*>(value), size), GetArena());
-  // @@protoc_insertion_point(field_set_pointer:chat.ChatReply.response)
+  // @@protoc_insertion_point(field_set_pointer:chat.ChatReply.name)
 }
-inline std::string* ChatReply::_internal_mutable_response() {
+inline std::string* ChatReply::_internal_mutable_name() {
   
-  return response_.Mutable(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+  return name_.Mutable(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
 }
-inline std::string* ChatReply::release_response() {
-  // @@protoc_insertion_point(field_release:chat.ChatReply.response)
-  return response_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+inline std::string* ChatReply::release_name() {
+  // @@protoc_insertion_point(field_release:chat.ChatReply.name)
+  return name_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
 }
-inline void ChatReply::set_allocated_response(std::string* response) {
-  if (response != nullptr) {
+inline void ChatReply::set_allocated_name(std::string* name) {
+  if (name != nullptr) {
     
   } else {
     
   }
-  response_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), response,
+  name_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), name,
       GetArena());
-  // @@protoc_insertion_point(field_set_allocated:chat.ChatReply.response)
+  // @@protoc_insertion_point(field_set_allocated:chat.ChatReply.name)
 }
-inline std::string* ChatReply::unsafe_arena_release_response() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:chat.ChatReply.response)
+inline std::string* ChatReply::unsafe_arena_release_name() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:chat.ChatReply.name)
   GOOGLE_DCHECK(GetArena() != nullptr);
   
-  return response_.UnsafeArenaRelease(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+  return name_.UnsafeArenaRelease(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
       GetArena());
 }
-inline void ChatReply::unsafe_arena_set_allocated_response(
-    std::string* response) {
+inline void ChatReply::unsafe_arena_set_allocated_name(
+    std::string* name) {
   GOOGLE_DCHECK(GetArena() != nullptr);
-  if (response != nullptr) {
+  if (name != nullptr) {
     
   } else {
     
   }
-  response_.UnsafeArenaSetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-      response, GetArena());
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:chat.ChatReply.response)
+  name_.UnsafeArenaSetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      name, GetArena());
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:chat.ChatReply.name)
 }
 
 // string message = 2;

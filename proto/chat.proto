@@ -11,6 +11,6 @@ message ChatMessage {
 }
 
 message ChatReply {
-  string response = 1;
+  string name = 1;
   string message = 2;
 }

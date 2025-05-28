@@ -69,7 +69,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_chat_2eproto::offsets[] PROTOB
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::chat::ChatReply, response_),
+  PROTOBUF_FIELD_OFFSET(::chat::ChatReply, name_),
   PROTOBUF_FIELD_OFFSET(::chat::ChatReply, message_),
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
@@ -84,10 +84,10 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
 
 const char descriptor_table_protodef_chat_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
   "\n\nchat.proto\022\004chat\",\n\013ChatMessage\022\014\n\004nam"
-  "e\030\001 \001(\t\022\017\n\007message\030\002 \001(\t\".\n\tChatReply\022\020\n"
-  "\010response\030\001 \001(\t\022\017\n\007message\030\002 \001(\t2=\n\013Chat"
-  "Service\022.\n\004Chat\022\021.chat.ChatMessage\032\017.cha"
-  "t.ChatReply(\0010\001b\006proto3"
+  "e\030\001 \001(\t\022\017\n\007message\030\002 \001(\t\"*\n\tChatReply\022\014\n"
+  "\004name\030\001 \001(\t\022\017\n\007message\030\002 \001(\t2=\n\013ChatServ"
+  "ice\022.\n\004Chat\022\021.chat.ChatMessage\032\017.chat.Ch"
+  "atReply(\0010\001b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_chat_2eproto_deps[1] = {
 };
@@ -97,7 +97,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_cha
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_chat_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_chat_2eproto = {
-  false, false, descriptor_table_protodef_chat_2eproto, "chat.proto", 183,
+  false, false, descriptor_table_protodef_chat_2eproto, "chat.proto", 179,
   &descriptor_table_chat_2eproto_once, descriptor_table_chat_2eproto_sccs, descriptor_table_chat_2eproto_deps, 2, 0,
   schemas, file_default_instances, TableStruct_chat_2eproto::offsets,
   file_level_metadata_chat_2eproto, 2, file_level_enum_descriptors_chat_2eproto, file_level_service_descriptors_chat_2eproto,
@@ -371,9 +371,9 @@ ChatReply::ChatReply(::PROTOBUF_NAMESPACE_ID::Arena* arena)
 ChatReply::ChatReply(const ChatReply& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  response_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (!from._internal_response().empty()) {
-    response_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from._internal_response(),
+  name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_name().empty()) {
+    name_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from._internal_name(),
       GetArena());
   }
   message_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
@@ -386,7 +386,7 @@ ChatReply::ChatReply(const ChatReply& from)
 
 void ChatReply::SharedCtor() {
   ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_ChatReply_chat_2eproto.base);
-  response_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   message_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
@@ -398,7 +398,7 @@ ChatReply::~ChatReply() {
 
 void ChatReply::SharedDtor() {
   GOOGLE_DCHECK(GetArena() == nullptr);
-  response_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  name_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   message_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
@@ -423,7 +423,7 @@ void ChatReply::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  response_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+  name_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
   message_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
@@ -436,12 +436,12 @@ const char* ChatReply::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     CHK_(ptr);
     switch (tag >> 3) {
-      // string response = 1;
+      // string name = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
-          auto str = _internal_mutable_response();
+          auto str = _internal_mutable_name();
           ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "chat.ChatReply.response"));
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "chat.ChatReply.name"));
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -482,14 +482,14 @@ failure:
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // string response = 1;
-  if (this->response().size() > 0) {
+  // string name = 1;
+  if (this->name().size() > 0) {
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_response().data(), static_cast<int>(this->_internal_response().length()),
+      this->_internal_name().data(), static_cast<int>(this->_internal_name().length()),
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "chat.ChatReply.response");
+      "chat.ChatReply.name");
     target = stream->WriteStringMaybeAliased(
-        1, this->_internal_response(), target);
+        1, this->_internal_name(), target);
   }
 
   // string message = 2;
@@ -518,11 +518,11 @@ size_t ChatReply::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // string response = 1;
-  if (this->response().size() > 0) {
+  // string name = 1;
+  if (this->name().size() > 0) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_response());
+        this->_internal_name());
   }
 
   // string message = 2;
@@ -563,8 +563,8 @@ void ChatReply::MergeFrom(const ChatReply& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from.response().size() > 0) {
-    _internal_set_response(from._internal_response());
+  if (from.name().size() > 0) {
+    _internal_set_name(from._internal_name());
   }
   if (from.message().size() > 0) {
     _internal_set_message(from._internal_message());
@@ -592,7 +592,7 @@ bool ChatReply::IsInitialized() const {
 void ChatReply::InternalSwap(ChatReply* other) {
   using std::swap;
   _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
-  response_.Swap(&other->response_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+  name_.Swap(&other->name_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
   message_.Swap(&other->message_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
 }
 
