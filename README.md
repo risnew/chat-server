@@ -11,4 +11,4 @@ pc=<path_to_grpc_cpp_plugin> ../proto/chat.proto` where you can find `<path_to_g
 ```
 sudo apt install -y protobuf-compiler libprotobuf-dev libprotoc-dev libgrpc++-dev grpc-proto
 ```
-
+This implementation is not asynchronous.
